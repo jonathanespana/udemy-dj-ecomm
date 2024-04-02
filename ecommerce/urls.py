@@ -22,10 +22,15 @@ from django.contrib import admin
 from django.urls import path
 
 from . import views
+from products_app.views import ProductListView, product_list_view, ProductDetailView, product_detail_view
 
 urlpatterns = [
     path('', views.home_page),
     path('about/', views.about_page),
+    path('products/', ProductListView.as_view()),
+    path('products-fbv/', product_list_view),
+    path('product/<int:pk>/', ProductDetailView.as_view()),
+    path('product-fbv/<int:pk>/', product_detail_view),
     path('contact/', views.contact_page),
     path('login/', views.login_page),
     path('register/', views.register_page),
