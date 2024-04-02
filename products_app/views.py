@@ -1,6 +1,7 @@
 from typing import Any
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
+from django.http import Http404
 
 from .models import Product
 
@@ -24,7 +25,12 @@ class ProductDetailView(DetailView):
         print(context)
         return context
 
+    #product_detail = get_object_or_404(Product, pk=pk)
 def product_detail_view(request, pk):
-    product_detail = get_object_or_404(Product, pk=pk)
-    context = {"product": product_detail}
+    try:
+        product_detail = Product.objects.get(pk=pk)
+        context = {"product": product_detail}
+    except Product.DoesNotExist:
+        print("No product matches query")
+        raise Http404("No product matches the given search.")
     return render(request, "products/detail.html", context)
