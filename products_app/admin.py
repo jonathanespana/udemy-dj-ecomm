@@ -4,5 +4,10 @@ from .models import Product
 
 # Register your models here.
 
-admin.site.register(Product)
+class ProductSlugAdmin(admin.ModelAdmin):
+    prepopulated_fields = {
+        "slug_name": ["name"]
+    }
+
+admin.site.register(Product, ProductSlugAdmin)
 

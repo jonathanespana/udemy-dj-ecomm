@@ -1,0 +1,51 @@
+{% url "home" as home_url %}
+{% url "products:list" as product_list_url %}
+{% url "contact" as contact_url %}
+{% url "login" as login_url %}
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="http://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" class="d-inline-block align-text-top" alt="Bootstrap" width="30" height="24">
+            {% if brand_name %} {{ brand_name }} {% else %}Django Ecomm Store {% endif %}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == home_url %} active {% endif %}" aria-current="page" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == product_list_url %} active {% endif %}" href="{% url 'products:list' %}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == contact_url %} active {% endif %}" href="{% url 'contact' %}">Contact</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item {% if request.path == home %} active {% endif %}">
+                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <div class="nav-item">
+                <a class="nav-link {% if request.path == login_url %} active {% endif %}" href="{% url 'login' %}">Login</a>
+            </div>
+            {% include "snippets/search_form.html" %}
+        </div>
+    </div>
+</nav>

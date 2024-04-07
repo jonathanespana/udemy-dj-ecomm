@@ -6,6 +6,25 @@ from django.http import Http404
 from .models import Product
 
 # Create your views here.
+class ProductFeaturedListView(ListView):
+    template_name = "products/list.html"
+
+    def get_queryset(self, *args, **kwargs):
+        request = self.request
+        return Product.ftd.get_featured()
+    
+class ProductFeaturedDetailView(DetailView):
+    #queryset = Product.objects.all()
+    template_name = "products/featured-detail.html"
+    
+    def get_queryset(self, *args, **kwargs):
+        request = self.request
+        pk = self.kwargs.get('pk')
+        found_product = Product.ftd.get_featured().filter(pk=pk)
+        if found_product is None:
+            raise Http404("No product matches.")
+        return found_product
+
 class ProductListView(ListView):
     context_object_name = "product_list"
     template_name = "products/list.html"
@@ -31,12 +50,24 @@ class ProductDetailView(DetailView):
     def get_object(self, *args, **kwargs):
         request = self.request
         pk = self.kwargs.get("pk")
-        found_product = Product.objects.get_by_id(pk)
+        found_product = Product.products.get_by_id(pk)
         print(found_product)
         if found_product is None:
             raise Http404("No product matches.")
 
         return found_product
+    
+class ProductDetailSlugView(DetailView):
+    queryset = Product.objects.all()
+    template_name = "products/detail.html"
+
+    def get_object(self, *args, **kwargs):
+        slug = self.kwargs.get("slug_name")
+        print(slug)
+        found_product = Product.products.get_by_slug(slug)
+        return found_product
+
+
 
     #product_detail = get_object_or_404(Product, pk=pk)
     #try:
@@ -45,10 +76,11 @@ class ProductDetailView(DetailView):
     #    print("No product matches query")
     #    raise Http404("No product matches the given search.")
 def product_detail_view(request, pk):
-
-    found_product = Product.objects.get_by_id(pk)
+    found_product = Product.products.get_by_id(pk)
     print(found_product)
     if found_product is None:
         raise Http404("No product matches.")
     context = {"product": found_product}
     return render(request, "products/detail.html", context)
+
+

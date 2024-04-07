@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="row">
+        {% if request.GET.q %}
+        <h2>Results for {{request.GET.q}}</h2>
+        {% else %}
+        <div class="col">
+            {% include "snippets/search_form.html" %}
+        </div>
+        {% endif %}
+    </div>
     <div class="row text-center">
         <h1>Products List</h1>
     </div>
@@ -23,14 +32,3 @@
     {% endif %}
         
 {% endblock %}
-    <!-- div class="card" style="width: 18rem;">
-        <a href="{{product.get_absolute_url}}">
-            <img src="{{product.image.url}}" class="card-img-top" alt="...">
-        </a>
-        <div class="card-body">
-            <h5 class="card-title">{{card_title}}</h5>
-            <p class="card-text">{{card_price}}</p>
-            <a href="{{product.get_absolute_url}}" class="btn btn-primary">View More</a>
-            <a href="{% url 'product' product.slug_name %}" class="btn btn-warning">View More</a>
-        </div>
-    </div> -->

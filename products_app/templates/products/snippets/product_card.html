@@ -1,0 +1,19 @@
+<!-- 
+    Card requirements
+    card_image - image url
+    card_title -  string
+    card_link - url path
+    card_price - number
+    card_slug - slugified
+-->
+<div class="card" style="width: 18rem;">
+    <a href="{{card_link}}">
+        <img src="{{card_image}}" class="card-img-top" alt="...">
+    </a>
+    <div class="card-body">
+        <h5 class="card-title">{{card_title}}</h5>
+        <p class="card-text">{{card_price}}</p>
+        <a href="{{card_link}}" class="btn btn-primary">View More</a>
+        <a href="{% url 'products:detail' card_slug %}" class="btn btn-warning">View More</a>
+    </div>
+</div>
