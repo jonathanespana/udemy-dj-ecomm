@@ -23,4 +23,4 @@ class SearchProductListView(ListView):
 def product_list_view(request):
     all_products = Product.objects.all()
     context = {"product_list": all_products}
-    return render(request, "products/list.html", context)
+    return render(request, "search/view.html", context)
