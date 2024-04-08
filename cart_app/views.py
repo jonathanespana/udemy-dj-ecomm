@@ -8,7 +8,13 @@ def create_cart(request):
     return cart_obj
 
 def cart_home(request):
-    cart_obj = Cart.cart_manager.new_or_get(request)
+    cart_obj, new_obj = Cart.cart_manager.new_or_get(request)
+    subtotal = cart_obj.subtotal
+    total = cart_obj.total
+    print(subtotal)
+    print(total)
+    return render(request, "cart/home.html", {})
+
     #cart_id = request.session.get("cart_id", None)
     # if cart_id is None:
     #     #print("create new cart")
@@ -30,4 +36,3 @@ def cart_home(request):
     #'set_expiry' request.session.session_expiry(300) num in milliseconds 5minutes 
     # set a session variable example first name
     # request.session["first_name"] = "Jonny"
-    return render(request, "cart/home.html", {})
