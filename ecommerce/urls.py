@@ -22,7 +22,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import views
-from cart_app.views import cart_home
 
 # from products_app.views import (
 #         ProductListView, 
@@ -39,10 +38,10 @@ urlpatterns = [
     path('about/', views.about_page, name="about"),
     path('contact/', views.contact_page, name="contact"),
     path('login/', views.login_page, name="login"),
-    path('cart/', cart_home, name="cart"),
     path('register/', views.register_page, name="register"),
     path('admin/', admin.site.urls),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
+    path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),
     path('search/', include(("search_app.urls", "search"), namespace="search")),
     #path('tags/', include(("tags_app.urls", "tags"), namespace="tags")),
 

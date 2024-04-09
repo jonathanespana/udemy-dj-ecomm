@@ -10,7 +10,7 @@
     <div class="row">
         {% for product in product_list %}
         <div class="col">
-            {% include 'products/snippets/product_card.html' with card_title=product.name card_link=product.get_absolute_url card_slug=product.slug_name card_image=product.image.url card_price=product.price %}
+            {% include 'products/snippets/product_card.html' with object=product %}
         </div>
         {% empty %}
         <div class="col">
