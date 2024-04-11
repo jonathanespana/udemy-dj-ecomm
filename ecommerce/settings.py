@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'tags_app',
     'cart_app',
     'orders_app',
+    'accounts_app',
+    'billing_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -104,6 +106,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+LOGOUT_REDIRECT_URL = '/'
 
 
 # Internationalization

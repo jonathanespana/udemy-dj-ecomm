@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
 from . import views
@@ -27,8 +28,9 @@ urlpatterns = [
     path('', views.home_page, name="home"),
     path('about/', views.about_page, name="about"),
     path('contact/', views.contact_page, name="contact"),
-    path('login/', views.login_page, name="login"),
-    path('register/', views.register_page, name="register"),
+    path('accounts/', include(("accounts_app.urls", "accounts"), namespace="accounts")),
+    #path('logout/', LogoutView.as_view(), name="logout"),
+    # path('register/', views.register_page, name="register"),
     path('admin/', admin.site.urls),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
     path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),

@@ -39,7 +39,8 @@
 {% else %}
 <div class="row">
     <div class="col">
-        <p>Cart is empty</p>
+        <p>You haven't added any items to your cart yet</p>
+        <p>Go back to <a href="{% url 'products:list' %}">Products</a></p>    
     </div>
 </div>
 {% endif %}
