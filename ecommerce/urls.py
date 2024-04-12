@@ -23,17 +23,19 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
 from . import views
+from addresses_app.views import checkout_address_create_view
 
 urlpatterns = [
     path('', views.home_page, name="home"),
     path('about/', views.about_page, name="about"),
     path('contact/', views.contact_page, name="contact"),
+    path('checkout_address_create/', checkout_address_create_view, name="checkout_address_create"),
     path('accounts/', include(("accounts_app.urls", "accounts"), namespace="accounts")),
-    #path('logout/', LogoutView.as_view(), name="logout"),
-    # path('register/', views.register_page, name="register"),
-    path('admin/', admin.site.urls),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
     path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),
     path('search/', include(("search_app.urls", "search"), namespace="search")),
+    #path('logout/', LogoutView.as_view(), name="logout"),
+    # path('register/', views.register_page, name="register"),
+    path('admin/', admin.site.urls),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

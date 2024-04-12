@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'orders_app',
     'accounts_app',
     'billing_app',
+    'addresses_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

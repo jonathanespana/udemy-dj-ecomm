@@ -22,11 +22,21 @@
         </div>
     </div>
 {% else %}
-    <h1>Checkout</h1>
 
-    <p>Cart total: {{ object.cart.total }}</p>
-    <p>Shipping total: {{ object.shipping_total }}</p>
-    <p>Order total: {{ object.total }}</p>
+    {% if not object.shipping_address  %}
+        {% url 'checkout_address_create' as checkout_address_create %}
+        {% include "addresses/snippets/form.html" with form=shipping_address_form address_type="shipping" next_url=request.build_absolute_uri action_url=checkout_address_create %}
+
+    {% elif not object.billing_address %}
+        {% url 'checkout_address_create' as checkout_address_create %}
+        {% include "addresses/snippets/form.html" with form=billing_address_form address_type="billing" next_url=request.build_absolute_uri action_url=checkout_address_create %}
+
+        <h1>Checkout</h1>
+
+        <p>Cart total: {{ object.cart.total }}</p>
+        <p>Shipping total: {{ object.shipping_total }}</p>
+        <p>Order total: {{ object.total }}</p>
+    {% endif %}
 {% endif %}
 
 {% endblock %}
