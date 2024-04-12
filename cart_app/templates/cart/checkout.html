@@ -30,8 +30,8 @@
     {% elif not object.billing_address %}
         {% url 'checkout_address_create' as checkout_address_create %}
         {% include "addresses/snippets/form.html" with form=billing_address_form address_type="billing" next_url=request.build_absolute_uri action_url=checkout_address_create %}
-
-        <h1>Checkout</h1>
+    {% else %}
+        <h1>Finalize Checkout:</h1>
 
         <p>Cart total: {{ object.cart.total }}</p>
         <p>Shipping total: {{ object.shipping_total }}</p>

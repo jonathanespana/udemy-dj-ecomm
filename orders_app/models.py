@@ -4,6 +4,7 @@ from django.db.models.signals import pre_save, post_save
 
 from cart_app.models import Cart
 from billing_app.models import BillingProfile
+from addresses_app.models import Address
 from ecommerce.utils import unique_order_id_generator
 
 # Create your models here.
@@ -31,13 +32,12 @@ class OrderManager(models.Manager):
 
 class Order(models.Model):
     billing_profile = models.ForeignKey(BillingProfile, null=True, blank=True, on_delete=models.CASCADE)
+    shipping_address = models.ForeignKey(Address, related_name="shipping_address", null=True, blank=True, on_delete=models.CASCADE)
+    billing_address = models.ForeignKey(Address, related_name="billing_address", null=True, blank=True, on_delete=models.CASCADE)
     order_id = models.CharField(max_length=120, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     status = models.CharField(max_length=120, default="created")
-    active = models.BooleanField(default=True)
-    #billing_profile = 
-    #shipping_address = 
-    #billing_address = 
+    active = models.BooleanField(default=True) 
     shipping_total = models.DecimalField(default=9.99, max_digits=20, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=20, decimal_places=2)
 
