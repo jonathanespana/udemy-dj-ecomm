@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+{{object.order_id}} -- {{object.cart}}
+
 {% if not billing_profile %}
     <div class="row">
         <div class="col d-flex justify-content-center text-center">
             <div>
-                <a href="{% url 'accounts:login' %}" class="btn btn-link">Login</a>
+                <p>Login</p>
                 {% include "auth/snippets/form.html" with form=login_form next_url=request.build_absolute_uri %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center text-center">
+            <div>
+                <p>or continue as a guest</p>
+                {% url 'accounts:guest_register' as guest_register_url %}
+                {% include "auth/snippets/form.html" with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
             </div>
         </div>
     </div>
