@@ -19,6 +19,13 @@ class Address(models.Model):
 
     def __str__(self):
         return self.billing_profile.email
+    
+    def get_address(self):
+        if self.address_line2 is not None:
+            return f"{self.address_line1}, {self.address_line2}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
+        else:
+            return f"{self.address_line1}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
+
 
 
 

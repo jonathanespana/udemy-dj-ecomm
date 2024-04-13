@@ -69,6 +69,9 @@
         <div class="row">
             <div class="col d-flex justify-content-center">
                 <div>
+                    <p>In Shopping Cart: {% for product in object.cart.products.all %} {{ product }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                    <p>Shipping Address: {{  object.shipping_address.get_address }}</p>
+                    <p>Billing Address: {{  object.billing_address.get_address }}</p>
                     <p>Cart total: {{ object.cart.total }}</p>
                     <p>Shipping total: {{ object.shipping_total }}</p>
                     <p>Order total: {{ object.total }}</p>
