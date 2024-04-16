@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from orders_app.models import Order
@@ -10,6 +11,22 @@ from addresses_app.forms import AddressForm
 from addresses_app.models import Address
 
 # Create your views here.
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+def cart_detail_api_view(request):
+    cart_obj, new_obj = Cart.cart_manager.new_or_get(request)
+    products = [{ 
+        "name":x.name, 
+        "price": x.price, 
+        "url": x.get_absolute_url(), 
+        "id": x.id, 
+        } 
+        for x in cart_obj.products.all()]
+    cart_data = {"products": products, "subtotal": cart_obj.subtotal, "total": cart_obj.total}
+    return JsonResponse(cart_data)
+
 def cart_home(request):
     cart_obj, new_obj = Cart.cart_manager.new_or_get(request)
     return render(request, "cart/home.html", {"cart": cart_obj})
@@ -25,9 +42,18 @@ def cart_update(request):
         cart_obj, new_obj = Cart.cart_manager.new_or_get(request)
         if product_obj in cart_obj.products.all():
             cart_obj.products.remove(product_obj)
+            added = False
         else:
             cart_obj.products.add(product_obj)
+            added = True
         request.session['cart_items'] = cart_obj.products.count()
+        if is_ajax(request=request):
+            print("Ajax request")
+            return JsonResponse({
+                "added": added,
+                "removed": not added,
+                "cartItemCount": cart_obj.products.count(),
+            })
     return redirect("cart:home")
 
 def checkout_home(request):

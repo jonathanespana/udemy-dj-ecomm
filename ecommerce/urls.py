@@ -24,6 +24,7 @@ from django.urls import path, include
 
 from . import views
 from addresses_app.views import checkout_address_create_view, checkout_prev_address_use
+from cart_app.views import cart_detail_api_view
 
 urlpatterns = [
     path('', views.home_page, name="home"),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('contact/', views.contact_page, name="contact"),
     path('checkout_address_create/', checkout_address_create_view, name="checkout_address_create"),
     path('use_prev_address/', checkout_prev_address_use, name="use_prev_address"),
+    path('cart/api/cart/', cart_detail_api_view, name="api_cart_refresh"),
     path('accounts/', include(("accounts_app.urls", "accounts"), namespace="accounts")),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
     path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),
