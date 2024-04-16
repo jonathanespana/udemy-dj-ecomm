@@ -84,6 +84,13 @@
                         }
                     },
                     error: function(errorData){
+                        $.alert({
+                            icon: 'fa fa-warning',
+                            title: "Oops!",
+                            content:"We couldn't update your cart.  Please try again",
+                            type: 'orange',
+                            typeAnimated: false,
+                        })
                         console.log("error")
                         console.log(errorData)
                     },
@@ -124,6 +131,13 @@
                         }
                     },
                     error: function(errorData){
+                        $.alert({
+                            icon: 'fa fa-warning',
+                            title: "Oops!",
+                            content:"We couldn't update your cart.  Please try again",
+                            type: 'orange',
+                            typeAnimated: false,
+                        })
                         console.log("error")
                         console.log(errorData)
                     },

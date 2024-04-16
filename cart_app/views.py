@@ -49,11 +49,13 @@ def cart_update(request):
         request.session['cart_items'] = cart_obj.products.count()
         if is_ajax(request=request):
             print("Ajax request")
-            return JsonResponse({
+            json_data = {
                 "added": added,
                 "removed": not added,
                 "cartItemCount": cart_obj.products.count(),
-            })
+            }
+            return JsonResponse(json_data, status=200)
+            # return JsonResponse({"message": "Error 400"}, status_code=400)
     return redirect("cart:home")
 
 def checkout_home(request):
