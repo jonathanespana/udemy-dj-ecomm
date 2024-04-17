@@ -1,0 +1,38 @@
+[
+{
+    "model": "products_app.product",
+    "pk": 1,
+    "fields": {
+        "name": "Tee Shirt",
+        "description": "This is a tee shirt",
+        "price": "39.99",
+        "image": "products/bkoffwhitehoodie_SGkDkRk.png",
+        "featured": true,
+        "slug_name": "tee-shirt"
+    }
+},
+{
+    "model": "products_app.product",
+    "pk": 2,
+    "fields": {
+        "name": "Hat",
+        "description": "This is a hat",
+        "price": "39.99",
+        "image": "products/blkshirtfront.png",
+        "featured": false,
+        "slug_name": "hat"
+    }
+},
+{
+    "model": "products_app.product",
+    "pk": 3,
+    "fields": {
+        "name": "Hoodie",
+        "description": "This is a hoodie",
+        "price": "39.99",
+        "image": "products/313167722/313167722bkblkhoodie.png",
+        "featured": true,
+        "slug_name": "hoodie"
+    }
+}
+]

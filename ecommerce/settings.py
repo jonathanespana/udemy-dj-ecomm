@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'accounts_app',
     'billing_app',
     'addresses_app',
+    'analytics_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTH_USER_MODEL = 'accounts_app.User'
 
 ROOT_URLCONF = 'ecommerce.urls'
 

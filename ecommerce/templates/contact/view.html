@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>{{ title }}</h1>
-    <form method="POST">
+    <form class="contact-form form-control" method="POST" action="{% url 'contact' %}">
         {% csrf_token %}
         {{ form }}
         <button type="submit" class="btn btn-success">Submit</button>

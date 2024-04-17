@@ -4,6 +4,7 @@ import os
 import random
 from django.db import models
 
+# create json copy of database python3 manage.py dumpdata products_app --format json --indent 4 > products_app/fixtures/products.json
 # Create your models here.
 
 def get_filename_ext(filepath):

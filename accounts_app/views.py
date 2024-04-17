@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views.generic import CreateView, FormView
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -23,6 +24,31 @@ def guest_register_view(request):
         else:
             return redirect("accounts:register")
     return redirect("accounts:register")
+
+class LoginView(FormView):
+    form_class = LoginForm
+    success_url = '/'
+    template_name = 'auth/login.html'
+
+    def form_valid(self, form):
+        request = self.request
+        next_ = request.GET.get("next")
+        next_post = request.POST.get("next")
+        redirect_path = next_ or next_post or None
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            try:
+                del request.session["guest_email_id"]
+            except:
+                pass
+            if url_has_allowed_host_and_scheme(redirect_path, request.get_host()):
+                return redirect(redirect_path)
+            else:
+                return redirect("/")
+        return super(LoginView, self).form_invalid(form)
 
 def login_page(request):
     form = LoginForm(request.POST)
@@ -56,20 +82,19 @@ def logout_view(request):
     logout(request)
     return redirect("home")
 
-def register_page(request):
-    User = get_user_model()
-    form = RegisterForm(request.POST)
-    if form.is_valid():
-        print(form.cleaned_data)
-        username = form.cleaned_data.get("username")
-        email = form.cleaned_data.get("email")
-        password = form.cleaned_data.get("password")
-        new_user = User.objects.create_user(username, email, password)
-        if new_user:
-            print(new_user)
-        return redirect("/register")
-    context = {
-        "title": "Register!",
-        "form": form,
-    }
-    return render(request, 'auth/register.html', context)
+class RegisterView(CreateView):
+    form_class = RegisterForm
+    template_name = "auth/register.html"
+    success_url = '/auth/login'
+
+# def register_page(request):
+#     User = get_user_model()
+#     form = RegisterForm(request.POST or None)
+#     if form.is_valid():
+#         form.save()
+#         return redirect("register")
+#     context = {
+#         "title": "Register!",
+#         "form": form,
+#     }
+#     return render(request, 'auth/register.html', context)
