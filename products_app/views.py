@@ -1,8 +1,8 @@
-from typing import Any
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 
+from analytics_app.mixins import ObjectViewedMixin
 from cart_app.models import Cart
 from .models import Product
 
@@ -14,7 +14,7 @@ class ProductFeaturedListView(ListView):
         request = self.request
         return Product.ftd.get_featured()
     
-class ProductFeaturedDetailView(DetailView):
+class ProductFeaturedDetailView(ObjectViewedMixin, DetailView):
     #queryset = Product.objects.all()
     template_name = "products/featured-detail.html"
     
@@ -45,7 +45,7 @@ def product_list_view(request):
     context = {"product_list": all_products}
     return render(request, "products/list.html", context)
 
-class ProductDetailView(DetailView):
+class ProductDetailView(ObjectViewedMixin, DetailView):
     #queryset = Product.objects.all()
     template_name = "products/detail.html"
 
@@ -64,7 +64,7 @@ class ProductDetailView(DetailView):
 
         return found_product
     
-class ProductDetailSlugView(DetailView):
+class ProductDetailSlugView(ObjectViewedMixin, DetailView):
     queryset = Product.objects.all()
     template_name = "products/detail.html"
 
@@ -75,19 +75,21 @@ class ProductDetailSlugView(DetailView):
         return context
 
     def get_object(self, *args, **kwargs):
+        request = self.request
         slug = self.kwargs.get("slug_name")
         print(slug)
         #found_product = Product.products.get_by_slug(slug)
         try:
-            found_product = Product.objects.get(slug_name=slug)
+            instance = Product.objects.get(slug_name=slug)
         except Product.DoesNotExist:
             raise Http404("Not found ...")
         except Product.MultipleObjectsReturned:
             qs = Product.objects.filter(slug_name=slug)
-            found_product = qs.first()
+            instance = qs.first()
         except:
             raise Http404("hmmmmm")
-        return found_product
+        #object_viewed_signal.send(sender=instance.__class__, instance=instance , request=request)
+        return instance
 
 
 

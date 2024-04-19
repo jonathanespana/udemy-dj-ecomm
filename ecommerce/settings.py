@@ -10,10 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,6 +49,7 @@ INSTALLED_APPS = [
     'billing_app',
     'addresses_app',
     'analytics_app',
+    'stripe',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,6 +69,9 @@ MIDDLEWARE = [
 ]
 
 AUTH_USER_MODEL = 'accounts_app.User'
+
+FORCE_SESSION_TO_ONE = False
+FORCE_INACTIVE_USER_ENDSESSION = False
 
 ROOT_URLCONF = 'ecommerce.urls'
 
@@ -143,3 +156,6 @@ MEDIA_ROOT = 'media_root'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STRIPE_PUBLISHABLE_KEY = env('STRIPE_TEST_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_TEST_SECRET_KEY')

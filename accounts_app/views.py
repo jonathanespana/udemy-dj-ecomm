@@ -5,6 +5,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import GuestEmail
 from .forms import LoginForm, RegisterForm, GuestForm
+from .signals import user_logged_in_signal
 
 # Create your views here.
 def guest_register_view(request):
@@ -40,6 +41,7 @@ class LoginView(FormView):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
+            user_logged_in_signal.send(sender=user.__class__, instance=user, request=request)
             try:
                 del request.session["guest_email_id"]
             except:

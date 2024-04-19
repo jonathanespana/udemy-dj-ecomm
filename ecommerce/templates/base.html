@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     {% include "base/base_css.html" %}
+    {% block styles %}
+    {% endblock %}
 </head>
 <body>
     {% include "base/base_nav.html" with brand_name="Ecomm Site" %}
@@ -16,5 +18,7 @@
     
 </body>
     {% include "base/base_scripts.html" %}
+    {% block scripts %}
+    {% endblock %}
 
 </html>

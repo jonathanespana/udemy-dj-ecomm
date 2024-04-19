@@ -25,12 +25,15 @@ from django.urls import path, include
 from . import views
 from addresses_app.views import checkout_address_create_view, checkout_prev_address_use
 from cart_app.views import cart_detail_api_view
+from billing_app.views import payment_method_view, payment_method_create_view
 
 urlpatterns = [
     path('', views.home_page, name="home"),
     path('about/', views.about_page, name="about"),
     path('contact/', views.contact_page, name="contact"),
     path('checkout_address_create/', checkout_address_create_view, name="checkout_address_create"),
+    path('checkout/payment-method/', payment_method_view, name="checkout_payment_method"),
+    path('checkout/payment-create', payment_method_create_view, name="checkout_payment_method_endpoint"),
     path('use_prev_address/', checkout_prev_address_use, name="use_prev_address"),
     path('cart/api/cart/', cart_detail_api_view, name="api_cart_refresh"),
     path('accounts/', include(("accounts_app.urls", "accounts"), namespace="accounts")),

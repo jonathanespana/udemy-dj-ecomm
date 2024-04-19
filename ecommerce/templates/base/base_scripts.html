@@ -1,10 +1,21 @@
 {% load static %}
 
-{% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/e7214382bf.js" crossorigin="anonymous"></script>
+<!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- FontAwesome -->
+<script src="https://kit.fontawesome.com/e7214382bf.js" crossorigin="anonymous"></script>
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- jquery confirm -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+<!-- Js Render -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.14/jsrender.js" integrity="sha512-F04KQsV+Pc8tvLdZBsTx6zE1n1943BuZv00+oiz2VaAbo3iiTUNEJlfsjv/PFMLbzVfLwZ02MtZ02o+6/Z06QQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% include 'base/js_template.html' %}
+<!-- Custom Scripts -->
+<!-- CSRF ajax token -->
 <script src="{% static 'scripts/csrf.ajax.js' %}" ></script>
+<!-- Custom JS -->
 <script src="{% static 'scripts/ecommerce-app.js' %}" defer></script>
-{% endblock %}
+<script src="{% static 'scripts/ecommerce-payments.js' %}" defer></script>
