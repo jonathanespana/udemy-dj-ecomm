@@ -62,6 +62,15 @@
             {% endif %}
         </div>
     {% else %}
+    {% if not has_card %}
+    <!-- Enter credit card here -->
+        <div class="row">
+            <div class="col-10 col-md-6 mx-auto">
+                <div class="stripe-payment-form" data-token="{{publish_key}}" data-next-url="{{ request.build_absolute_uri }}" data-btn-title="Add Payment Method"></div>
+            </div>
+        </div>
+
+    {% else %}
         <div class="row">
             <h1>Finalize Checkout:</h1>
             <hr>
@@ -82,6 +91,7 @@
                 </div>
             </div>
         </div>
+    {% endif%}
         
     {% endif %}
 {% endif %}

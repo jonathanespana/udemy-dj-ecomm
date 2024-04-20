@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.conf import settings
 
 from orders_app.models import Order
 from products_app.models import Product
@@ -10,7 +11,12 @@ from accounts_app.forms import LoginForm, GuestForm
 from addresses_app.forms import AddressForm
 from addresses_app.models import Address
 
+import stripe
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe_publishable_key = settings.STRIPE_PUBLISHABLE_KEY
 # Create your views here.
+
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -71,6 +77,7 @@ def checkout_home(request):
 
     billing_profile, billing_profile_created = BillingProfile.billing_profile_manager.new_or_get(request)
     address_qs = None
+    has_card = False
     if billing_profile is not None:
         if request.user.is_authenticated:
             address_qs = Address.objects.filter(billing_profile=billing_profile)
@@ -83,14 +90,20 @@ def checkout_home(request):
             order_obj.billing_address = Address.objects.get(id=billing_address_id)
             order_obj.save()
             del request.session["billing_address_id"]
+        has_card = billing_profile.has_card
     
     if request.method == "POST":
-        is_done = order_obj.check_done()
-        if is_done:
-            order_obj.mark_paid()
-            del request.session["cart_items"]
-            del request.session["cart_id"]
-            return redirect("cart:success")
+        is_prepared = order_obj.check_done()
+        if is_prepared:
+            did_charge, charge_msg = billing_profile.charge(order_obj)
+            if did_charge:
+                order_obj.mark_paid()
+                del request.session["cart_items"]
+                del request.session["cart_id"]
+                return redirect("cart:success")
+            else:
+                print(charge_msg)
+                return redirect("cart:checkout")
     
     context = {
         "object": order_obj,
@@ -99,6 +112,8 @@ def checkout_home(request):
         "guest_form": guest_form,
         "address_form": address_form,
         "address_qs": address_qs,
+        "has_card": has_card,
+        "publish_key": stripe_publishable_key,
     }
     return render(request, 'cart/checkout.html', context)
 

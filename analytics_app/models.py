@@ -34,17 +34,22 @@ class ObjectViewed(models.Model):
 
 def object_viewed_reciever(sender, instance, request, *args, **kwargs):
     c_type = ContentType.objects.get_for_model(sender)
-    # print(sender)
     # print(instance)
     # print(request)
-    # print(request.user)
-
-    new_view_obj = ObjectViewed.objects.create(
-        user = request.user,
-        ip_address = get_client_id(request),
-        content_type = c_type,
-        object_id = instance.id,
-    )
+    print(request.user.id)
+    if request.user.id is None:
+        new_view_obj = ObjectViewed.objects.create(
+            ip_address = get_client_id(request),
+            content_type = c_type,
+            object_id = instance.id,
+        )
+    else: 
+        new_view_obj = ObjectViewed.objects.create(
+            user = request.user,
+            ip_address = get_client_id(request),
+            content_type = c_type,
+            object_id = instance.id,
+        )
 
 object_viewed_signal.connect(object_viewed_reciever)
 
