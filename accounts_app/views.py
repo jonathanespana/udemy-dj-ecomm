@@ -87,7 +87,7 @@ def logout_view(request):
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = "auth/register.html"
-    success_url = '/auth/login'
+    success_url = '/accounts/login'
 
 # def register_page(request):
 #     User = get_user_model()

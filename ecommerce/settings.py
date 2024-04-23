@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'billing_app',
     'addresses_app',
     'analytics_app',
+    'marketing_app',
     'stripe',
     'django.contrib.admin',
     'django.contrib.auth',
