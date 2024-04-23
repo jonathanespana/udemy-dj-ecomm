@@ -62,21 +62,85 @@ $(document).ready(function(){
     });
 
     // handle form submission
-    var form = document.getElementById('payment-form');
-    form.addEventListener('submit', function(event) {
+    // var form = document.getElementById('payment-form');
+    // form.addEventListener('submit', function(event) {
+    //     event.preventDefault();
+
+    //     var loadTime = 1500
+    //     var errorHmtl = "<i class='fa fa-warning'></i> An error occured"
+    //     var errorClasses = "btn btn-danger disabled"
+    //     var loadingHmtl = "<i class='fa fa-spin fa-spinner'></i> Loading..."
+    //     var loadingClasses = "btn btn-success disabled"
+    //     stripe.createToken(card).then(function(result) {
+    //         if (result.error) {
+    //             //inform the user if error
+    //             var errorElement = document.getElementById('card-errors');
+    //             errorElement.textContent = result.error.message;
+    //         } else {
+    //             // send the token to your server
+    //             stripeTokenHandler(nextUrl, result.token);
+    //         }
+    //     });
+    // });
+
+    var form = $('#payment-form');
+    var btnLoad = form.find(".btn-loader")
+    var btnLoadDefaultHtml = btnLoad.html()
+    var btnLoadDefaultClasses = btnLoad.attr("class")
+
+    form.on('submit', function(event) {
         event.preventDefault();
 
+        var $this = $(this)
+        btnLoad.blur()
+        var loadTime = 1500
+        var currentTimeout;
+        var errorHmtl = "<i class='fa fa-warning'></i> An error occured"
+        var errorClasses = "btn btn-danger disabled"
+        var loadingHmtl = "<i class='fa fa-spin fa-spinner'></i> Loading..."
+        var loadingClasses = "btn btn-success disabled"
         stripe.createToken(card).then(function(result) {
             if (result.error) {
                 //inform the user if error
-                var errorElement = document.getElementById('card-errors');
-                errorElement.textContent = result.error.message;
+                var errorElement = $('#card-errors');
+                    errorElement.textContent = result.error.message;
+                    currentTimeout = displayBtnStatus(
+                        btnLoad, 
+                        errorHmtl, 
+                        errorClasses, 
+                        1000, 
+                        currentTimeout,
+                    )
             } else {
+                currentTimeout = displayBtnStatus(
+                        btnLoad, 
+                        loadingHmtl, 
+                        loadingClasses, 
+                        2000, 
+                        currentTimeout,
+                    )
                 // send the token to your server
                 stripeTokenHandler(nextUrl, result.token);
             }
         });
     });
+
+    function displayBtnStatus(element, newHtml, newClasses, loadTime, timeout){
+        // if (timeout){
+        //     clearTimeout(timeout)
+        // }
+        if (!loadTime){
+            loadTime = 1500
+        }
+        element.html(newHtml)
+        element.removeClass(btnLoadDefaultClasses)
+        element.addClass(newClasses)
+        return setTimeout(function(){
+            element.html(btnLoadDefaultHtml)
+            element.removeClass(newClasses)
+            element.addClass(btnLoadDefaultClasses)
+        }, loadTime)
+    }
 
     function redirectToNext(nextPath, timeOffset){
         if (nextPath){
@@ -107,13 +171,18 @@ $(document).ready(function(){
                 } else {
                     alert(successMsg)
                 }
+                btnLoad.html(btnLoadDefaultHtml)
+                btnLoad.attr("class", btnLoadDefaultClasses)
                 redirectToNext(nextUrl, 1500)
-
+                
                 // else {
-                //     window.location.reload()
-                // }
-            },
+                    //     window.location.reload()
+                    // }
+                },
             error: function(error){
+                $.alert({title: "An error occured", content: "Please try adding your card again."})
+                btnLoad.html(btnLoadDefaultHtml)
+                btnLoad.attr("class", btnLoadDefaultClasses)
                 console.log(error)
             }
         })
