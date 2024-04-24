@@ -34,17 +34,18 @@ urlpatterns = [
     path('contact/', views.contact_page, name="contact"),
     path('checkout_address_create/', checkout_address_create_view, name="checkout_address_create"),
     path('checkout/payment-method/', payment_method_view, name="checkout_payment_method"),
-    path('checkout/payment-create', payment_method_create_view, name="checkout_payment_method_endpoint"),
+    path('checkout/payment-create/', payment_method_create_view, name="checkout_payment_method_endpoint"),
     path('use_prev_address/', checkout_prev_address_use, name="use_prev_address"),
     path('cart/api/cart/', cart_detail_api_view, name="api_cart_refresh"),
     path('accounts/', include(("accounts_app.urls", "accounts"), namespace="accounts")),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
     path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),
     path('search/', include(("search_app.urls", "search"), namespace="search")),
-    path('settings/email', MarketingPrefUpdateView.as_view() ,name="marketing-pref"),
-    path('webhooks/mailchimp', MailchimpWebhookView.as_view() ,name="mailchimp-webhook"),
+    path('settings/email/', MarketingPrefUpdateView.as_view() ,name="marketing-pref"),
+    path('webhooks/mailchimp/', MailchimpWebhookView.as_view() ,name="mailchimp-webhook"),
     #path('logout/', LogoutView.as_view(), name="logout"),
     # path('register/', views.register_page, name="register"),
     path('admin/', admin.site.urls),
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

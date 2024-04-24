@@ -1,17 +1,11 @@
 asgiref==3.8.1
-Brotli==1.1.0
 certifi==2024.2.2
 charset-normalizer==3.3.2
-click==8.1.7
-dj-database-url==2.1.0
 Django==5.0.3
 django-environ==0.11.2
-h11==0.14.0
 idna==3.7
-packaging==24.0
 pillow==10.3.0
 psycopg2==2.9.9
-psycopg2-binary==2.9.9
 requests==2.31.0
 sqlparse==0.4.4
 stripe==9.2.0
