@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import environ
 import dj_database_url
+import os
 
 env = environ.Env(
     # set casting, default value
@@ -30,12 +31,12 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6^_m8*yw4pgst2l^p@#1y^4-x!&0)9!*07n(&i+(z0bu=cy9e)'
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", False) == True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -99,11 +100,11 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+database_url = env("DATABASE_URL")
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgres://ecommdb_27jk_user:V05EgPfITdSseYAoexBjSCOcQbXnidT8@dpg-cokktmun7f5s738t1iog-a.oregon-postgres.render.com/ecommdb_27jk',
+        default=database_url,
         conn_max_age=600
     )
 }
@@ -150,9 +151,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static_root'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = 'media_root'
 
 # Default primary key field type

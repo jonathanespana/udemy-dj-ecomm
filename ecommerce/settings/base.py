@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import environ
+import os
 
 env = environ.Env(
     # set casting, default value
@@ -145,6 +146,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static_root'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 
 MEDIA_URL = 'media/'

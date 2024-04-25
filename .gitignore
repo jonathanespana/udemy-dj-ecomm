@@ -269,8 +269,6 @@ pyrightconfig.json
 #libsass css cache
 CACHE
 
-STATIC
-*static
 
 media_root
 
