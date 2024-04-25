@@ -36,7 +36,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", False)
 
-ALLOWED_HOSTS = ["udemy-dj-ecomm.onrender.com"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -176,12 +176,3 @@ MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')
 MAILCHIMP_DATA_CENTER = env('MAILCHIMP_DATA_CENTER')
 MAILCHIMP_AUDIENCE_LIST_ID = env('MAILCHIMP_AUDIENCE_LIST_ID')
 
-CORS_REPLACE_HTTPS_REFERER      = True
-HOST_SCHEME                     = "https://"
-SECURE_PROXY_SSL_HEADER         = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT             = True
-SESSION_COOKIE_SECURE           = True
-CSRF_COOKIE_SECURE              = True
-SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
-SECURE_HSTS_SECONDS             = 1000000
-SECURE_FRAME_DENY               = True
