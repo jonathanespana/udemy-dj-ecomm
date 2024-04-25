@@ -152,7 +152,7 @@ $(document).ready(function(){
 
     function stripeTokenHandler(nextUrl, token){
         console.log(nextUrl,token.id)
-        var paymentMethodEndpoint = '/checkout/payment-create'
+        var paymentMethodEndpoint = '/checkout/payment-create/'
         var data = {
             'token': token.id,
         }
