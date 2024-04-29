@@ -36,7 +36,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", False)
 
-ALLOWED_HOSTS = ['udemy-dj-ecomm.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'analytics_app',
     'marketing_app',
     'stripe',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -150,6 +151,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
 STATIC_URL = '/static/'
 # STATIC_ROOT = 'static_root'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -161,8 +165,8 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = 'media_root'
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = 'media_root'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -175,6 +179,16 @@ STRIPE_SECRET_KEY = env('STRIPE_TEST_SECRET_KEY')
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')
 MAILCHIMP_DATA_CENTER = env('MAILCHIMP_DATA_CENTER')
 MAILCHIMP_AUDIENCE_LIST_ID = env('MAILCHIMP_AUDIENCE_LIST_ID')
+
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
+AWS_S3_ENDPOINT_URL = env('AWS_S3_ENDPOINT_URL')
+
+# Only public read for now
+AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL='public-read'
 
 
 
