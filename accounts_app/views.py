@@ -14,14 +14,6 @@ from .forms import LoginForm, RegisterForm, GuestForm
 from .signals import user_logged_in_signal
 
 # Create your views here.
-@login_required
-def accounts_home_view(request):
-    user = None
-    if request.user is not None:
-        user = request.user
-    return render(request, 'auth/home.html', {'object': user})
-
-    
 class AccountsHomeView(LoginRequiredMixin, DetailView):
     template_name = 'auth/home.html'
     def get_object(self):

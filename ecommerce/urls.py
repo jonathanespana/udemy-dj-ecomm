@@ -17,7 +17,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.views.generic import RedirectView
 from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import path, include
@@ -37,7 +37,9 @@ urlpatterns = [
     path('checkout/payment-create/', payment_method_create_view, name="checkout_payment_method_endpoint"),
     path('use_prev_address/', checkout_prev_address_use, name="use_prev_address"),
     path('cart/api/cart/', cart_detail_api_view, name="api_cart_refresh"),
-    path('accounts/', include(("accounts_app.urls", "accounts"), namespace="accounts")),
+    path('account/', include(("accounts_app.urls", "account"), namespace="account")),
+    path('accounts/', RedirectView.as_view(url="/account")),
+    path('settings/', RedirectView.as_view(url="/account")),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
     path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),
     path('search/', include(("search_app.urls", "search"), namespace="search")),

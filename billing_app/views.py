@@ -22,7 +22,7 @@ def payment_method_view(request):
     if not billing_profile:
         return redirect('/cart')
     next_url = None
-    next_ = request.GET.get('next') +'/'
+    next_ = request.GET.get('next')
     if url_has_allowed_host_and_scheme(next_, request.get_host()):
         next_url = next_
     return render(request, "billing/payment-method.html", {"publish_key": stripe_publishable_key, "next_url": next_url})
