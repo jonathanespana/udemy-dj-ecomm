@@ -192,5 +192,15 @@ AWS_S3_ENDPOINT_URL = env('AWS_S3_ENDPOINT_URL')
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL='public-read'
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'spainia801@gmail.com' 
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_EMAIL_FROM = 'Regular shop <spainia801@gmail.com>'
+
+Managers = [
+    ('Jonny', 'spainia801@gmail.com')
+]
 
 

@@ -1,6 +1,12 @@
+from typing import Any
+from django.http import HttpRequest
+from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, DetailView
 from django.contrib.auth import authenticate, login, get_user_model, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import GuestEmail
@@ -8,6 +14,20 @@ from .forms import LoginForm, RegisterForm, GuestForm
 from .signals import user_logged_in_signal
 
 # Create your views here.
+@login_required
+def accounts_home_view(request):
+    user = None
+    if request.user is not None:
+        user = request.user
+    return render(request, 'auth/home.html', {'object': user})
+
+    
+class AccountsHomeView(LoginRequiredMixin, DetailView):
+    template_name = 'auth/home.html'
+    def get_object(self):
+        return self.request.user
+
+
 def guest_register_view(request):
     form = GuestForm(request.POST or None)
     context = {
