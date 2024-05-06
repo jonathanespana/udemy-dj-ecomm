@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
-    <form class="contact-form form-control" method="POST" action="{% url 'contact' %}">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
+    <div class="row">
+        <div class="col-10 col-lg-6 mx-auto">
+            <h1>{{ title }}</h1>
+            <hr>
+            <form class="contact-form form-control" method="POST" action="{% url 'contact' %}">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

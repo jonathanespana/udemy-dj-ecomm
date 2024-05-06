@@ -15,7 +15,7 @@
         <div class="col d-flex justify-content-center text-center">
             <div>
                 <p>or continue as a guest</p>
-                {% url 'accounts:guest_register' as guest_register_url %}
+                {% url 'account:guest_register' as guest_register_url %}
                 {% include "auth/snippets/form.html" with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
             </div>
         </div>

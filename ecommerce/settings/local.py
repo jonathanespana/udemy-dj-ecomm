@@ -192,6 +192,7 @@ AWS_S3_ENDPOINT_URL = env('AWS_S3_ENDPOINT_URL')
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL='public-read'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'spainia801@gmail.com' 
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')

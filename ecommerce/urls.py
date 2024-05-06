@@ -38,6 +38,7 @@ urlpatterns = [
     path('use_prev_address/', checkout_prev_address_use, name="use_prev_address"),
     path('cart/api/cart/', cart_detail_api_view, name="api_cart_refresh"),
     path('account/', include(("accounts_app.urls", "account"), namespace="account")),
+    path('accounts/', include(("accounts_app.passwords.urls", 'accounts'))),
     path('accounts/', RedirectView.as_view(url="/account")),
     path('settings/', RedirectView.as_view(url="/account")),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
