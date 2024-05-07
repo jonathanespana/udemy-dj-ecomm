@@ -198,12 +198,6 @@ EMAIL_HOST_USER = 'jonathan@jonathanespana.com'
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_EMAIL_FROM = 'Regular shop <jonathan@jonathanespana.com>'
-
-MANAGERS = [
-    ('Jonathan', 'jonathan@jonathanespana.com')
-]
-
-ADMINS = MANAGERS
+DEFAULT_FROM_EMAIL = 'Regularshop <jonathan@jonathanespana.com>'
 
 
