@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, FormView, DetailView
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -52,6 +53,9 @@ class LoginView(FormView):
         password = form.cleaned_data.get("password")
         user = authenticate(request, username=email, password=password)
         if user is not None:
+            if not user.is_active:
+                messages.errors(request, "This email is not currently active,  please confirm email and then try again")
+                return super(LoginView, self).form_invalid(form)
             login(request, user)
             user_logged_in_signal.send(sender=user.__class__, instance=user, request=request)
             try:
@@ -99,7 +103,7 @@ def logout_view(request):
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = "auth/register.html"
-    success_url = '/accounts/login'
+    success_url = '/account/login'
 
 # def register_page(request):
 #     User = get_user_model()

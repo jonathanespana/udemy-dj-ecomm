@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from accounts_app.models import User
+from .models import User
 
 
 class UserCreationForm(forms.ModelForm):
@@ -111,7 +111,7 @@ class RegisterForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(RegisterForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        user.active = False # send verifcation or confirmation email
+        user.is_active = False # send verifcation or confirmation email via email
         if commit:
             user.save()
         return user
