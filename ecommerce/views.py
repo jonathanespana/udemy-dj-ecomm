@@ -1,13 +1,16 @@
 from django.contrib.auth import authenticate, login, get_user_model
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+
 from .forms import ContactForm, LoginForm, RegisterForm
+
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 def home_page(request):
     first_name = request.session.get("first_name", "Unknown")
+    
     print(first_name)
     context = {
         "title": "Hello World!",

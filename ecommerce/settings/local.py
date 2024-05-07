@@ -193,15 +193,17 @@ AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL='public-read'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'spainia801@gmail.com' 
+EMAIL_HOST = 'smtp.ionos.com'
+EMAIL_HOST_USER = 'jonathan@jonathanespana.com' 
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_EMAIL_FROM = 'Regular shop <spainia801@gmail.com>'
+DEFAULT_EMAIL_FROM = 'Regular shop <jonathan@jonathanespana.com>'
 
-Managers = [
-    ('Jonny', 'spainia801@gmail.com')
+MANAGERS = [
+    ('Jonathan', 'jonathan@jonathanespana.com')
 ]
+
+ADMINS = MANAGERS
 
 
