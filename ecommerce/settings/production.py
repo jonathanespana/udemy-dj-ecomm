@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import environ
+import dj_database_url
+import os
 
 env = environ.Env(
     # set casting, default value
@@ -29,12 +31,12 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6^_m8*yw4pgst2l^p@#1y^4-x!&0)9!*07n(&i+(z0bu=cy9e)'
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['udemy-dj-ecomm.onrender.com']
 
 
 # Application definition
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'analytics_app',
     'marketing_app',
     'stripe',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,13 +102,17 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+database_url = env("DATABASE_URL")
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default=database_url,
+        conn_max_age=600
+    )
 }
+
+
+# postgres://ecommdb_27jk_user:V05EgPfITdSseYAoexBjSCOcQbXnidT8@dpg-cokktmun7f5s738t1iog-a.oregon-postgres.render.com/ecommdb_27jk
 
 
 # Password validation
@@ -143,12 +151,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = 'static_root'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media_root'
+STATIC_URL = '/static/'
+# STATIC_ROOT = 'static_root'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+from ecommerce.aws.conf import *
+
+
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = 'media_root'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -161,3 +181,26 @@ STRIPE_SECRET_KEY = env('STRIPE_TEST_SECRET_KEY')
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')
 MAILCHIMP_DATA_CENTER = env('MAILCHIMP_DATA_CENTER')
 MAILCHIMP_AUDIENCE_LIST_ID = env('MAILCHIMP_AUDIENCE_LIST_ID')
+
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
+AWS_S3_ENDPOINT_URL = env('AWS_S3_ENDPOINT_URL')
+
+# Only public read for now
+AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL='public-read'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.ionos.com'
+EMAIL_HOST_USER = 'jonathan@jonathanespana.com' 
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Regularshop <jonathan@jonathanespana.com>'
+
+BASE_URL = 'https://udemy-dj-ecomm.onrender.com'
+# BASE_URL = '127.0.0.1:8000'
+
+

@@ -1,16 +1,18 @@
 from typing import Any
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
+from django.urls import reverse
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, FormView, DetailView
+from django.views.generic import CreateView, FormView, DetailView, View
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.safestring import mark_safe
 
-from .models import GuestEmail
+from .models import GuestEmail, EmailActivation
 from .forms import LoginForm, RegisterForm, GuestForm
 from .signals import user_logged_in_signal
 
@@ -19,6 +21,33 @@ class AccountsHomeView(LoginRequiredMixin, DetailView):
     template_name = 'auth/home.html'
     def get_object(self):
         return self.request.user
+    
+class AccountConfirmView(View):
+    def get(self, request, key, *args, **kwargs):
+        qs = EmailActivation.objects.filter(key__iexact=key)
+        confirm_qs = qs.confirmable()
+        if confirm_qs.count() == 1:
+            obj = qs.first()
+            obj.activate()
+            messages.success(request, "Your email is confirmed. Please login.")
+            return redirect('account:login')
+        else:
+            activated_qs = qs.filter(is_activated=True)
+            if activated_qs.exists():
+                reset_link = reverse("accounts:password_reset")
+                msg = f"""Your email has already been confirmed.
+                Do you need to <a href="{reset_link}">reset your password?</a>"""
+                messages.success(request, mark_safe(msg))
+                return redirect('account:login')
+        # if activated
+        # redirect
+        # if already activated
+        # redirect
+        return render(request, 'registration/email/verification-error.html', {})
+    
+    def post(self, request, *args, **kwargs):
+        pass
+
 
 
 def guest_register_view(request):

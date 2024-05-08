@@ -36,7 +36,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", False)
 
-ALLOWED_HOSTS = ['udemy-dj-ecomm.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -200,7 +200,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Regularshop <jonathan@jonathanespana.com>'
 
-BASE_URL = 'https://udemy-dj-ecomm.onrender.com'
-# BASE_URL = '127.0.0.1:8000'
+# BASE_URL = 'https://udemy-dj-ecomm.onrender.com'
+BASE_URL = '127.0.0.1:8000'
 
 
