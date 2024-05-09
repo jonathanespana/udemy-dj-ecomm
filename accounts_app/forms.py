@@ -1,11 +1,25 @@
 from django import forms
+from django.urls import reverse
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 
-from .models import User
+from .models import User, EmailActivation
+
+class EmailReactivationForm(forms.Form):
+    email = forms.EmailField()
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        qs = EmailActivation.objects.email_exists(email)
+        if not qs.exists():
+            register_link = reverse("account:register")
+            msg = f"""Email not found, Do you like to <a href="{register_link}">register?</a>?"""
+            raise forms.ValidationError(mark_safe(msg))
+        return email
 
 
 class UserCreationForm(forms.ModelForm):
@@ -62,7 +76,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
         ("Personal Info", {"fields": ["full_name"]}),
-        ("Permissions", {"fields": ["is_admin", "is_staff"]}),
+        ("Permissions", {"fields": ["is_active", "is_admin", "is_staff"]}),
     ]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.

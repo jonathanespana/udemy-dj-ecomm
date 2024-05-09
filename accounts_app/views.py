@@ -1,9 +1,10 @@
 from typing import Any
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, FormView, DetailView, View
+from django.views.generic.edit import FormMixin
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.decorators import login_required
@@ -13,7 +14,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.safestring import mark_safe
 
 from .models import GuestEmail, EmailActivation
-from .forms import LoginForm, RegisterForm, GuestForm
+from .forms import LoginForm, RegisterForm, GuestForm, EmailReactivationForm
 from .signals import user_logged_in_signal
 
 # Create your views here.
@@ -22,31 +23,56 @@ class AccountsHomeView(LoginRequiredMixin, DetailView):
     def get_object(self):
         return self.request.user
     
-class AccountConfirmView(View):
-    def get(self, request, key, *args, **kwargs):
-        qs = EmailActivation.objects.filter(key__iexact=key)
-        confirm_qs = qs.confirmable()
-        if confirm_qs.count() == 1:
-            obj = qs.first()
-            obj.activate()
-            messages.success(request, "Your email is confirmed. Please login.")
-            return redirect('account:login')
-        else:
-            activated_qs = qs.filter(is_activated=True)
-            if activated_qs.exists():
-                reset_link = reverse("accounts:password_reset")
-                msg = f"""Your email has already been confirmed.
-                Do you need to <a href="{reset_link}">reset your password?</a>"""
-                messages.success(request, mark_safe(msg))
-                return redirect('account:login')
+class AccountConfirmView(FormMixin, View):
+    success_url= "/account/login"
+    form_class = EmailReactivationForm
+    key = None
+    def get(self, request, key=None, *args, **kwargs):
+        self.key = key
+        if key is not None:
+            qs = EmailActivation.objects.filter(key__iexact=key)
+            confirm_qs = qs.confirmable()
+            if confirm_qs.count() == 1:
+                obj = confirm_qs.first()
+                obj.activate()
+                messages.success(request, "Your email is confirmed. Please login.")
+                return redirect('/account/login')
+            else:
+                activated_qs = qs.filter(is_activated=True)
+                if activated_qs.exists():
+                    reset_link = reverse("accounts:password_reset")
+                    msg = f"""Your email has already been confirmed.
+                    Do you need to <a href="{reset_link}">reset your password?</a>"""
+                    messages.success(request, mark_safe(msg))
+                    return redirect('/account/login')
         # if activated
         # redirect
         # if already activated
         # redirect
-        return render(request, 'registration/email/verification-error.html', {})
+        context = {"form": self.get_form, "key": key }
+        return render(request, 'registration/email/verification-error.html', context)
     
     def post(self, request, *args, **kwargs):
-        pass
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+        
+    def form_valid(self, form):
+        msg = f"""Activation link sent, please check your email."""
+        request = self.request
+        email = form.cleaned_data.get("email")
+        messages.success(request, msg)
+        obj = EmailActivation.objects.email_exists(email).first()
+        user = obj.user
+        new_activation = EmailActivation.objects.create(user=user, email=email)
+        new_activation.send_activation_email()
+        return super(AccountConfirmView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        context = {'form': form, "key": self.key }
+        return render(self.request, 'registration/email/verification-error.html', context)
 
 
 

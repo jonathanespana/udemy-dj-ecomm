@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.conf import settings
@@ -123,6 +124,12 @@ class EmailActivationManager(models.Manager):
     
     def confirmable(self):
         return self.get_queryset().confirmable()
+    
+    def email_exists(self, email):
+        return self.get_queryset().filter(
+            Q(email=email)
+            ).filter(is_activated=False)
+
 
 class EmailActivation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -137,7 +144,7 @@ class EmailActivation(models.Model):
     objects = EmailActivationManager()
 
     def __str__(self):
-        return self.user.email
+        return self.email
     
     def can_activate(self):
         qs = EmailActivation.objects.filter(pk=self.pk).confirmable() # 1 object
@@ -167,7 +174,7 @@ class EmailActivation(models.Model):
             if self.key:
                 base_url = getattr(settings, 'BASE_URL')
                 key_path = reverse("account:email-confirm", kwargs={'key':self.key})
-                path = f'{base_url}/{key_path}'
+                path = f'{base_url}{key_path}'
                 context = {
                     'path': path,
                     'email': self.email,
