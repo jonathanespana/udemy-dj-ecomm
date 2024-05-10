@@ -15,7 +15,7 @@ from django.utils.safestring import mark_safe
 
 from .models import GuestEmail, EmailActivation
 from .forms import LoginForm, RegisterForm, GuestForm, EmailReactivationForm
-from .signals import user_logged_in_signal
+from ecommerce.mixins import NextUrlMixin, RequestFormAttachMixin
 
 # Create your views here.
 class AccountsHomeView(LoginRequiredMixin, DetailView):
@@ -94,34 +94,15 @@ def guest_register_view(request):
             return redirect("accounts:register")
     return redirect("accounts:register")
 
-class LoginView(FormView):
+class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
     form_class = LoginForm
     success_url = '/'
     template_name = 'auth/login.html'
+    default_next = '/'
 
     def form_valid(self, form):
-        request = self.request
-        next_ = request.GET.get("next")
-        next_post = request.POST.get("next")
-        redirect_path = next_ or next_post or None
-        email = form.cleaned_data.get("email")
-        password = form.cleaned_data.get("password")
-        user = authenticate(request, username=email, password=password)
-        if user is not None:
-            if not user.is_active:
-                messages.errors(request, "This email is not currently active,  please confirm email and then try again")
-                return super(LoginView, self).form_invalid(form)
-            login(request, user)
-            user_logged_in_signal.send(sender=user.__class__, instance=user, request=request)
-            try:
-                del request.session["guest_email_id"]
-            except:
-                pass
-            if url_has_allowed_host_and_scheme(redirect_path, request.get_host()):
-                return redirect(redirect_path)
-            else:
-                return redirect("/")
-        return super(LoginView, self).form_invalid(form)
+            next_path = self.get_next_url()
+            return redirect(next_path)
 
 def login_page(request):
     form = LoginForm(request.POST)
