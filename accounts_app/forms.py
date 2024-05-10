@@ -8,7 +8,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 
-from .models import User, EmailActivation
+from .models import User, EmailActivation, GuestEmail
 from .signals import user_logged_in_signal
 
 class EmailReactivationForm(forms.Form):
@@ -95,8 +95,24 @@ class UserAdmin(BaseUserAdmin):
     ordering = ["email"]
     filter_horizontal = []
 
-class GuestForm(forms.Form):
-    email = forms.EmailField()
+class GuestForm(forms.ModelForm):
+    # email = forms.EmailField()
+    class Meta:
+        model = GuestEmail
+        fields = ['email']
+
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(GuestForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        obj = super(GuestForm, self).save(commit=False)
+        if commit:
+            obj.save()
+            request = self.request
+            request.session["guest_email_id"] = obj.id
+        return obj
+
 
 class LoginForm(forms.Form):
     email = forms.EmailField(label="Email")
