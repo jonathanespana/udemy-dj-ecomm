@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from analytics_app.mixins import ObjectViewedMixin
 from cart_app.models import Cart
@@ -25,6 +26,24 @@ class ProductFeaturedDetailView(ObjectViewedMixin, DetailView):
         if found_product is None:
             raise Http404("No product matches.")
         return found_product
+
+class UserProductHistoryView(LoginRequiredMixin, ListView):
+    context_object_name = "product_list"
+    template_name = "products/history-list.html"
+    # template_name = "products/list.html" #display products once
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserProductHistoryView,self).get_context_data(*args, **kwargs)
+        cart_obj, new_obj = Cart.cart_manager.new_or_get(self.request)
+        context["cart"] = cart_obj
+        return context
+
+    def get_queryset(self, *args,**kwargs):
+        request = self.request
+        views = request.user.objectviewed_set.by_model(Product, model_queryset=False) #set to True to display product once
+        # viewed_ids = [x.object_id for x in views]
+        # return Product.objects.filter(pk__in = viewed_ids)
+        return views
 
 class ProductListView(ListView):
     context_object_name = "product_list"
