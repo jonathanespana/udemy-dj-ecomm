@@ -1,6 +1,7 @@
 import math
 from django.db import models
 from django.db.models.signals import pre_save, post_save
+from django.urls import reverse
 
 from cart_app.models import Cart
 from billing_app.models import BillingProfile
@@ -15,7 +16,22 @@ ORDER_STATUS_CHOICES = (
     ('returned', 'Returned'),
 )
 
+class OrderManagerQuerySet(models.query.QuerySet):
+    def by_request(self, request):
+        billing_profile, created = BillingProfile.billing_profile_manager.new_or_get(request)
+        return self.filter(billing_profile = billing_profile)
+    
+    def active_order(self):
+        return self.exclude(status='created')
+
+
 class OrderManager(models.Manager):
+    def get_queryset(self):
+        return OrderManagerQuerySet(self.model, using=self._db)
+    
+    def by_request(self, request):
+        return self.get_queryset().by_request(request)
+
     def new_or_get(self, billing_profile, cart_obj):
         created = False
         qs = self.get_queryset().filter(
@@ -45,12 +61,29 @@ class Order(models.Model):
     active = models.BooleanField(default=True) 
     shipping_total = models.DecimalField(default=9.99, max_digits=20, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=20, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     order_manager = OrderManager()
     objects = models.Manager()
 
     def __str__(self):
         return self.order_id
+    
+    class Meta:
+        ordering = ["-created_at", "-updated_at"]
+    
+    def get_absolute_url(self):
+        return reverse("orders:orders-detail", kwargs={"order_id":self.order_id})
+    
+    def get_status(self):
+        if self.status == 'returned':
+            return "Refunder Order"
+        elif self.status == 'shipped':
+            return "Shipped"
+        else:
+            return "Getting Ready to Ship"
+
     
     def update_total(self):
         cart_total = self.cart.total

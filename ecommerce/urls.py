@@ -41,6 +41,7 @@ urlpatterns = [
     path('accounts/', include(("accounts_app.passwords.urls", 'accounts'))),
     path('accounts/', RedirectView.as_view(url="/account")),
     path('settings/', RedirectView.as_view(url="/account")),
+    path('orders/', include(("orders_app.urls", "orders"), namespace="orders")),
     path('products/', include(("products_app.urls", "products"), namespace="products")),
     path('cart/', include(("cart_app.urls", "cart"), namespace="cart")),
     path('search/', include(("search_app.urls", "search"), namespace="search")),

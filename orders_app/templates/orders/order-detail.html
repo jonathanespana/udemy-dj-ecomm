@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-10 col-lg-6 mx-auto">
+            <h1>Order {{object.order_id}}</h1>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col-10 col-lg-6 mx-auto">
+            <div>
+                <p>Items: {% for product in object.cart.products.all %}{{product}}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                <p>Shipping Address: {{  object.shipping_address.get_address }}</p>
+                <p>Billing Address: {{  object.billing_address.get_address }}</p>
+                <p>Payment Method: {{ object.billing_profile.default_card }}</p>
+                <p>Subtotal: {{ object.cart.total }}</p>
+                <p>Shipping total: {{ object.shipping_total }}</p>
+                <p>Order Status: {{ object.get_status }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
