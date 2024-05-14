@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, FormView, DetailView, View
+from django.views.generic import CreateView, FormView, DetailView, View, UpdateView
 from django.views.generic.edit import FormMixin
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model, logout
@@ -14,7 +14,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.safestring import mark_safe
 
 from .models import GuestEmail, EmailActivation
-from .forms import LoginForm, RegisterForm, GuestForm, EmailReactivationForm
+from .forms import LoginForm, RegisterForm, GuestForm, EmailReactivationForm, UserDetailChangeForm
 from ecommerce.mixins import NextUrlMixin, RequestFormAttachMixin
 
 # Create your views here.
@@ -158,6 +158,23 @@ class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = "auth/register.html"
     success_url = '/account/login'
+
+class UserDetailUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = UserDetailChangeForm
+    template_name = 'auth/detail-update-view.html'
+
+    def get_object(self):
+        return self.request.user
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserDetailUpdateView, self).get_context_data(*args, **kwargs)
+        context["title"] = "Change Your Account Details"
+        return context
+    
+    def get_success_url(self):
+        return reverse("account:home")
+
+
 
 # def register_page(request):
 #     User = get_user_model()
