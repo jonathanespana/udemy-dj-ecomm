@@ -54,12 +54,13 @@
                 </a>
                 <ul class="dropdown-menu">
                         {% if request.user.is_authenticated %}
-                        <li><a class="dropdown-item {% if request.path == logout_url %} active {% endif %}" href="{% url 'account:logout' %}">Logout</a></li>
                         <li><a class="dropdown-item {% if request.path == account_url %} active {% endif %}" href="{% url 'account:home' %}">Settings</a></li>
-                        <li><a class="dropdown-item" href="{% url 'account:home' %}">Account Details</a></li>
-                        <li><a class="dropdown-item" href="{% url 'account:home' %}">Billing</a></li>
-                        <li><a class="dropdown-item" href="{% url 'account:home' %}">History</a></li>
-                        <li><a class="dropdown-item" href="{% url 'account:home' %}">Support</a></li>
+                        <li><a class="dropdown-item" href="{% url 'account:user-library' %}">Library</a></li>
+                        <li><a class="dropdown-item" href="{% url 'checkout_payment_method' %}">Billing</a></li>
+                        <li><a class="dropdown-item" href="{% url 'account:user-products-history' %}">History</a></li>
+                        <li><a class="dropdown-item" href="{% url 'contact' %}">Contact Us</a></li>
+                        <hr class="dropdown-divider">
+                        <li><a class="dropdown-item {% if request.path == logout_url %} active {% endif %}" href="{% url 'account:logout' %}">Logout</a></li>
                         {% else %}
                         <li><a class="dropdown-item {% if request.path == login_url %} active {% endif %}" href="{% url 'account:login' %}">Login</a></li>
                         <li>

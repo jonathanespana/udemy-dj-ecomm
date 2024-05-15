@@ -1,10 +1,12 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 from django.views.generic import ListView, DetailView
 from django.http import Http404
 from django.shortcuts import render
 
 from billing_app.models import BillingProfile
-from .models import Order
+from .models import Order, ProductPurchase
 
 # Create your views here.
 class OrderListView(LoginRequiredMixin, ListView):
@@ -24,3 +26,8 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         if qs.count() == 1:
             return qs.first()
         raise Http404
+
+class PurchaseLibraryView(LoginRequiredMixin, ListView):
+    template_name = 'orders/library.html'
+    def get_queryset(self):
+        return ProductPurchase.objects.products_by_request(self.request)#.digital()
