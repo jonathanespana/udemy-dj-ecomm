@@ -70,6 +70,10 @@ class Product(models.Model):
     image = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
     featured = models.BooleanField(default=False)
     slug_name =  models.SlugField(default="", max_length=120)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_digital = models.BooleanField(default=False)
 
     objects = models.Manager()
     ftd = FeaturedManager()

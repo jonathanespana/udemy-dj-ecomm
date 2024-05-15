@@ -8,7 +8,7 @@
 -->
 <div class="card" style="width: 18rem;">
     <a href="{{object.get_absolute_url}}">
-        <img src="{{object.image.url}}" class="card-img-top" alt="...">
+        <img src="{% if object.image %}{{object.image.url}}{% else %}{% endif %}" class="card-img-top" alt="...">
     </a>
     <div class="card-body">
         <h5 class="card-title">{{object.name}}</h5>

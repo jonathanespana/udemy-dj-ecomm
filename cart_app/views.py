@@ -35,6 +35,7 @@ def cart_detail_api_view(request):
 
 def cart_home(request):
     cart_obj, new_obj = Cart.cart_manager.new_or_get(request)
+    print(cart_obj.is_digital)
     return render(request, "cart/home.html", {"cart": cart_obj})
 
 def cart_update(request):
@@ -72,8 +73,11 @@ def checkout_home(request):
     login_form = LoginForm(request=request)
     guest_form = GuestForm(request=request)
     address_form = AddressForm()
-    shipping_address_id = request.session.get("shipping_address_id", None)
     billing_address_id = request.session.get("billing_address_id", None)
+
+    shipping_address_required = not cart_obj.is_digital
+
+    shipping_address_id = request.session.get("shipping_address_id", None)
 
     billing_profile, billing_profile_created = BillingProfile.billing_profile_manager.new_or_get(request)
     address_qs = None
@@ -116,6 +120,7 @@ def checkout_home(request):
         "address_qs": address_qs,
         "has_card": has_card,
         "publish_key": stripe_publishable_key,
+        "shipping_address_required": shipping_address_required,
     }
     return render(request, 'cart/checkout.html', context)
 

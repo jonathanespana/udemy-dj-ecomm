@@ -22,7 +22,7 @@
     </div>
 {% else %}
 
-    {% if not object.shipping_address  %}
+    {% if not object.shipping_address and shipping_address_required %}
         <div class="row">
             <h1>Shipping Address</h1>
             <hr>
@@ -79,7 +79,7 @@
             <div class="col d-flex justify-content-center">
                 <div>
                     <p>In Shopping Cart: {% for product in object.cart.products.all %} {{ product }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-                    <p>Shipping Address: {{  object.shipping_address.get_address }}</p>
+                    {% if object.shipping_address %}<p>Shipping Address: {{  object.shipping_address.get_address }}</p>{% else %}<p>Shipping Address: Not required</p>{%endif%}
                     <p>Billing Address: {{  object.billing_address.get_address }}</p>
                     <p>Payment Method: {{ billing_profile.default_card }} (<a href="{{ billing_profile.get_payment_method_url }}?next={{ request.build_absolute_uri }}">Change</a>)</p>
                     <p>Cart total: {{ object.cart.total }}</p>
