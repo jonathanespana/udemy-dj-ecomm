@@ -88,3 +88,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+def upload_product_file_loc(instance, filename):
+        if instance.product.slug_name:
+            location = f"product/{instance.product.slug_name}/"
+        return location + filename
+
+class ProductFile(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=upload_product_file_loc)
+
+    def __str__(self):
+        return str(self.file.name)
