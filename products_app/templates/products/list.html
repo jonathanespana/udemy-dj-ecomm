@@ -2,14 +2,11 @@
 
 {% block content %}
     <div class="row text-center">
-        <h1>Products List</h1>
-    </div>
-    <div class="row">
-        <h3>Products</h3>
+        <h1>Products</h1>
     </div>
     <div class="row">
         {% for product in product_list %}
-        <div class="col">
+        <div class="col my-3">
             {% include 'products/snippets/product_card.html' with object=product %}
         </div>
         {% empty %}

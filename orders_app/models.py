@@ -15,7 +15,7 @@ ORDER_STATUS_CHOICES = (
     ('created', 'Created'),
     ('paid', 'Paid'),
     ('shipped', 'Shipped'),
-    ('returned', 'Returned'),
+    ('refunded', 'Refunded'),
 )
 
 class OrderManagerQuerySet(models.query.QuerySet):
@@ -79,8 +79,8 @@ class Order(models.Model):
         return reverse("orders:orders-detail", kwargs={"order_id":self.order_id})
     
     def get_status(self):
-        if self.status == 'returned':
-            return "Refunder Order"
+        if self.status == 'refunded':
+            return "Refunded Order"
         elif self.status == 'shipped':
             return "Shipped"
         else:
@@ -184,10 +184,14 @@ class ProductPurchaseManager(models.Manager):
     def by_request(self, request):
         return self.get_queryset().by_request(request)
     
-    def products_by_request(self, request):
+    def products_by_id(self, request):
         qs = self.by_request(request).digital()
-        product_ids = [x.product.id for x in qs]
-        products_qs = Product.objects.filter(id__in=product_ids)
+        ids_ = [x.product.id for x in qs]
+        return ids_
+    
+    def products_by_request(self, request):
+        ids_ = self.products_by_id(request)
+        products_qs = Product.objects.filter(id__in=ids_)
         return products_qs
 
 

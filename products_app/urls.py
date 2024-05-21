@@ -27,6 +27,7 @@ urlpatterns = [
     #path('products-fbv/', views.product_list_view),
     #path('products/<int:pk>/', views.ProductDetailView.as_view()),
     path('<slug:slug_name>/', views.ProductDetailSlugView.as_view(), name="detail"),
-   # path('products-fbv/<int:pk>/', views.product_detail_view),
+    # path('<slug:slug_name>/<int:pk>/', views.ProductDownloadView.as_view(), name="download"),
+    # path('products-fbv/<int:pk>/', views.product_detail_view),
 
 ]
